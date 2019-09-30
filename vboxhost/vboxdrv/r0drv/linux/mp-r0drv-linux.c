@@ -283,12 +283,7 @@ RTDECL(int) RTMpOnAll(PFNRTMPWORKER pfnWorker, void *pvUser1, void *pvUser2)
     if (RTCpuSetCount(&OnlineSet) > 1)
     {
         /* Fire the function on all other CPUs without waiting for completion. */
-# if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)
-        int rc = smp_call_function(rtmpLinuxAllWrapper, &Args, 0 /* wait */);
-# else
-        int rc = smp_call_function(rtmpLinuxAllWrapper, &Args, 0 /* retry */, 0 /* wait */);
-# endif
-        Assert(!rc); NOREF(rc);
+        NOREF(smp_call_function(rtmpLinuxAllWrapper, &Args, 0 /* wait */));
     }
 #endif
 
@@ -326,7 +321,6 @@ RTDECL(int) RTMpOnOthers(PFNRTMPWORKER pfnWorker, void *pvUser1, void *pvUser2)
 {
 #ifdef CONFIG_SMP
     IPRT_LINUX_SAVE_EFL_AC();
-    int rc;
     RTMPARGS Args;
 
     RTTHREADPREEMPTSTATE PreemptState = RTTHREADPREEMPTSTATE_INITIALIZER;
@@ -337,14 +331,11 @@ RTDECL(int) RTMpOnOthers(PFNRTMPWORKER pfnWorker, void *pvUser1, void *pvUser2)
     Args.cHits = 0;
 
     RTThreadPreemptDisable(&PreemptState);
-# if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)
-    rc = smp_call_function(rtmpLinuxWrapper, &Args, 1 /* wait */);
-# else /* older kernels */
-    rc = smp_call_function(rtmpLinuxWrapper, &Args, 0 /* retry */, 1 /* wait */);
-# endif /* older kernels */
+
+    NOREF(smp_call_function(rtmpLinuxWrapper, &Args, 1 /* wait */));
+
     RTThreadPreemptRestore(&PreemptState);
 
-    Assert(rc == 0); NOREF(rc);
     IPRT_LINUX_RESTORE_EFL_AC();
 #else
     RT_NOREF(pfnWorker, pvUser1, pvUser2);
