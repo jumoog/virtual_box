@@ -1,10 +1,10 @@
-/* $Rev: 130196 $ */
+/* $Id: SUPDrv-linux.c 135976 2020-02-04 10:35:17Z bird $ */
 /** @file
  * VBoxDrv - The VirtualBox Support Driver - Linux specifics.
  */
 
 /*
- * Copyright (C) 2006-2019 Oracle Corporation
+ * Copyright (C) 2006-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;
@@ -557,7 +557,8 @@ static int VBoxDrvLinuxIOCtl(struct inode *pInode, struct file *pFilp, unsigned 
 {
     PSUPDRVSESSION pSession = (PSUPDRVSESSION)pFilp->private_data;
     int rc;
-#if defined(VBOX_STRICT) || defined(VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV)
+#ifndef VBOX_WITHOUT_EFLAGS_AC_SET_IN_VBOXDRV
+# if defined(VBOX_STRICT) || defined(VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV)
     RTCCUINTREG fSavedEfl;
 
     /*
@@ -576,6 +577,7 @@ static int VBoxDrvLinuxIOCtl(struct inode *pInode, struct file *pFilp, unsigned 
 # else
     stac();
 # endif
+#endif
 
     /*
      * Deal with the two high-speed IOCtl that takes it's arguments from
@@ -598,7 +600,8 @@ static int VBoxDrvLinuxIOCtl(struct inode *pInode, struct file *pFilp, unsigned 
     lock_kernel();
 #endif  /* !HAVE_UNLOCKED_IOCTL */
 
-#if defined(VBOX_STRICT) || defined(VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV)
+#ifndef VBOX_WITHOUT_EFLAGS_AC_SET_IN_VBOXDRV
+# if defined(VBOX_STRICT) || defined(VBOX_WITH_EFLAGS_AC_SET_IN_VBOXDRV)
     /*
      * Before we restore AC and the rest of EFLAGS, check if the IOCtl handler code
      * accidentially modified it or some other important flag.
@@ -611,8 +614,9 @@ static int VBoxDrvLinuxIOCtl(struct inode *pInode, struct file *pFilp, unsigned 
         supdrvBadContext(&g_DevExt, "SUPDrv-linux.c",  __LINE__, szTmp);
     }
     ASMSetFlags(fSavedEfl);
-#else
+# else
     clac();
+# endif
 #endif
     return rc;
 }
@@ -1384,6 +1388,17 @@ static int VBoxDrvLinuxErr2LinuxErr(int rc)
     }
 
     return -EPERM;
+}
+
+
+SUPR0DECL(int) SUPR0HCPhysToVirt(RTHCPHYS HCPhys, void **ppv)
+{
+    AssertReturn(!(HCPhys & PAGE_OFFSET_MASK), VERR_INVALID_POINTER);
+    AssertReturn(HCPhys != NIL_RTHCPHYS, VERR_INVALID_POINTER);
+    /* Would've like to use valid_phys_addr_range for this test, but it isn't exported. */
+    AssertReturn((HCPhys | PAGE_OFFSET_MASK) < __pa(high_memory), VERR_INVALID_POINTER);
+    *ppv = phys_to_virt(HCPhys);
+    return VINF_SUCCESS;
 }
 
 

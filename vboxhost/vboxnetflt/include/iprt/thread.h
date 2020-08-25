@@ -3,7 +3,7 @@
  */
 
 /*
- * Copyright (C) 2006-2019 Oracle Corporation
+ * Copyright (C) 2006-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;
@@ -166,7 +166,7 @@ typedef enum RTTHREADTYPE
 } RTTHREADTYPE;
 
 
-#ifndef IN_RC
+#if !defined(IN_RC) || defined(DOXYGEN_RUNNING)
 
 /**
  * Checks if the IPRT thread component has been initialized.
@@ -279,7 +279,7 @@ typedef enum RTTHREADFLAGS
 RTDECL(int) RTThreadCreate(PRTTHREAD pThread, PFNRTTHREAD pfnThread, void *pvUser, size_t cbStack,
                            RTTHREADTYPE enmType, unsigned fFlags, const char *pszName);
 #ifndef RT_OS_LINUX /* XXX crashes genksyms at least on 32-bit Linux hosts */
-/** @copydoc RTThreadCreate */
+/** Pointer to a RTThreadCreate function. */
 typedef DECLCALLBACKPTR(int, PFNRTTHREADCREATE)(PRTTHREAD pThread, PFNRTTHREAD pfnThread, void *pvUser, size_t cbStack,
                                                 RTTHREADTYPE enmType, unsigned fFlags, const char *pszName);
 #endif
@@ -297,7 +297,7 @@ typedef DECLCALLBACKPTR(int, PFNRTTHREADCREATE)(PRTTHREAD pThread, PFNRTTHREAD p
  * @param   cbStack     See RTThreadCreate.
  * @param   enmType     See RTThreadCreate.
  * @param   fFlags      See RTThreadCreate.
- * @param   pszName     Thread name format.
+ * @param   pszNameFmt  Thread name format.
  * @param   va          Format arguments.
  */
 RTDECL(int) RTThreadCreateV(PRTTHREAD pThread, PFNRTTHREAD pfnThread, void *pvUser, size_t cbStack,
@@ -315,7 +315,7 @@ RTDECL(int) RTThreadCreateV(PRTTHREAD pThread, PFNRTTHREAD pfnThread, void *pvUs
  * @param   cbStack     See RTThreadCreate.
  * @param   enmType     See RTThreadCreate.
  * @param   fFlags      See RTThreadCreate.
- * @param   pszName     Thread name format.
+ * @param   pszNameFmt  Thread name format.
  * @param   ...         Format arguments.
  */
 RTDECL(int) RTThreadCreateF(PRTTHREAD pThread, PFNRTTHREAD pfnThread, void *pvUser, size_t cbStack,
@@ -914,8 +914,11 @@ RTR3DECL(RTTLS) RTTlsAlloc(void);
  * @param   piTls           Where to store the index of the allocated TLS entry.
  *                          This is set to NIL_RTTLS on failure.
  * @param   pfnDestructor   Optional callback function for cleaning up on
- *                          thread termination. WARNING! This feature may not
- *                          be implemented everywhere.
+ *                          thread termination.
+ * @note    In static builds on windows, the destructor will only be invoked for
+ *          IPRT threads.
+ * @note    There are probably OS specific restrictions on what operations you
+ *          are allowed to perform from a TLS destructor, so keep it simple.
  */
 RTR3DECL(int) RTTlsAllocEx(PRTTLS piTls, PFNRTTLSDTOR pfnDestructor);
 
@@ -962,7 +965,7 @@ RTR3DECL(int) RTTlsSet(RTTLS iTls, void *pvValue);
 /** @} */
 
 # endif /* IN_RING3 */
-# endif /* !IN_RC */
+#endif /* !IN_RC || defined(DOXYGEN_RUNNING) */
 
 /** @} */
 

@@ -1,10 +1,10 @@
-/* $Id: SUPDrvInternal.h 127870 2019-01-01 04:34:11Z bird $ */
+/* $Id: SUPDrvInternal.h 135976 2020-02-04 10:35:17Z bird $ */
 /** @file
  * VirtualBox Support Driver - Internal header.
  */
 
 /*
- * Copyright (C) 2006-2019 Oracle Corporation
+ * Copyright (C) 2006-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;
@@ -330,6 +330,8 @@ typedef struct SUPDRVLDRIMAGE
      * pvImage is 32-byte aligned or it may governed by the native loader (this
      * member is NULL then). */
     void                           *pvImageAlloc;
+    /** Magic value (SUPDRVLDRIMAGE_MAGIC). */
+    uint32_t                        uMagic;
     /** Size of the image including the tables. This is mainly for verification
      * of the load request. */
     uint32_t                        cbImageWithTabs;
@@ -383,6 +385,11 @@ typedef struct SUPDRVLDRIMAGE
     char                            szName[32];
 } SUPDRVLDRIMAGE, *PSUPDRVLDRIMAGE;
 
+/** Magic value for SUPDRVLDRIMAGE::uMagic (Charlotte Bronte). */
+#define SUPDRVLDRIMAGE_MAGIC        UINT32_C(0x18160421)
+/** Magic value for SUPDRVLDRIMAGE::uMagic when freed. */
+#define SUPDRVLDRIMAGE_MAGIC_DEAD   UINT32_C(0x18550331)
+
 
 /** Image usage record. */
 typedef struct SUPDRVLDRUSAGE
@@ -391,8 +398,10 @@ typedef struct SUPDRVLDRUSAGE
     struct SUPDRVLDRUSAGE * volatile pNext;
     /** The image. */
     PSUPDRVLDRIMAGE                 pImage;
-    /** Load count. */
-    uint32_t volatile               cUsage;
+    /** Load count (ring-3). */
+    uint32_t volatile               cRing3Usage;
+    /** Ring-0 usage counter. */
+    uint32_t volatile               cRing0Usage;
 } SUPDRVLDRUSAGE, *PSUPDRVLDRUSAGE;
 
 
@@ -646,6 +655,8 @@ typedef struct SUPDRVDEVEXT
     PSUPDRVLDRIMAGE volatile        pLdrInitImage;
     /** The thread currently executing a ModuleInit function. */
     RTNATIVETHREAD volatile         hLdrInitThread;
+    /** The thread currently executing a ModuleTerm function. */
+    RTNATIVETHREAD volatile         hLdrTermThread;
     /** @} */
 
     /** Number of times someone reported bad execution context via SUPR0BadContext.
@@ -889,7 +900,6 @@ RTCCUINTREG VBOXCALL supdrvOSChangeCR4(RTCCUINTREG fOrMask, RTCCUINTREG fAndMask
 bool VBOXCALL   supdrvOSSuspendVTxOnCpu(void);
 void VBOXCALL   supdrvOSResumeVTxOnCpu(bool fSuspended);
 int  VBOXCALL   supdrvOSGetCurrentGdtRw(RTHCUINTPTR *pGdtRw);
-int  VBOXCALL   supdrvOSGetRawModeUsability(void);
 
 /**
  * Try open the image using the native loader.

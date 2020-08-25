@@ -1,10 +1,10 @@
-/* $Id: waitqueue-r0drv-linux.h 132916 2019-08-26 18:30:06Z klaus $ */
+/* $Id: waitqueue-r0drv-linux.h 135976 2020-02-04 10:35:17Z bird $ */
 /** @file
  * IPRT - Linux Ring-0 Driver Helpers for Abstracting Wait Queues,
  */
 
 /*
- * Copyright (C) 2006-2019 Oracle Corporation
+ * Copyright (C) 2006-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;

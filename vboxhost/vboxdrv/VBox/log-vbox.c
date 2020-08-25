@@ -1,10 +1,10 @@
-/* $Id: log-vbox.cpp 127855 2019-01-01 01:45:53Z bird $ */
+/* $Id: log-vbox.cpp 137140 2020-04-10 12:57:00Z bird $ */
 /** @file
  * VirtualBox Runtime - Logging configuration.
  */
 
 /*
- * Copyright (C) 2006-2019 Oracle Corporation
+ * Copyright (C) 2006-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;
@@ -340,39 +340,28 @@ RTDECL(PRTLOGGER) RTLogDefaultInit(void)
     ASSERT_LOG_GROUP(LWIP_UDP);
     ASSERT_LOG_GROUP(MAIN);
     ASSERT_LOG_GROUP(MAIN_ADDITIONSFACILITY);
-    ASSERT_LOG_GROUP(MAIN_ADDITIONSSTATECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_APPLIANCE);
     ASSERT_LOG_GROUP(MAIN_AUDIOADAPTER);
     ASSERT_LOG_GROUP(MAIN_BANDWIDTHCONTROL);
     ASSERT_LOG_GROUP(MAIN_BANDWIDTHGROUP);
-    ASSERT_LOG_GROUP(MAIN_BANDWIDTHGROUPCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_BIOSSETTINGS);
-    ASSERT_LOG_GROUP(MAIN_CANSHOWWINDOWEVENT);
-    ASSERT_LOG_GROUP(MAIN_CLIPBOARDMODECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_CONSOLE);
-    ASSERT_LOG_GROUP(MAIN_CPUCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_CPUEXECUTIONCAPCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_CURSORPOSITIONCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_DHCPSERVER);
     ASSERT_LOG_GROUP(MAIN_DIRECTORY);
     ASSERT_LOG_GROUP(MAIN_DISPLAY);
     ASSERT_LOG_GROUP(MAIN_DISPLAYSOURCEBITMAP);
     ASSERT_LOG_GROUP(MAIN_DNDBASE);
-    ASSERT_LOG_GROUP(MAIN_DNDMODECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_DNDSOURCE);
     ASSERT_LOG_GROUP(MAIN_DNDTARGET);
     ASSERT_LOG_GROUP(MAIN_EMULATEDUSB);
     ASSERT_LOG_GROUP(MAIN_EVENT);
     ASSERT_LOG_GROUP(MAIN_EVENTLISTENER);
     ASSERT_LOG_GROUP(MAIN_EVENTSOURCE);
-    ASSERT_LOG_GROUP(MAIN_EVENTSOURCECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_EXTPACK);
     ASSERT_LOG_GROUP(MAIN_EXTPACKBASE);
     ASSERT_LOG_GROUP(MAIN_EXTPACKFILE);
     ASSERT_LOG_GROUP(MAIN_EXTPACKMANAGER);
     ASSERT_LOG_GROUP(MAIN_EXTPACKPLUGIN);
-    ASSERT_LOG_GROUP(MAIN_EXTRADATACANCHANGEEVENT);
-    ASSERT_LOG_GROUP(MAIN_EXTRADATACHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_FILE);
     ASSERT_LOG_GROUP(MAIN_FRAMEBUFFER);
     ASSERT_LOG_GROUP(MAIN_FRAMEBUFFEROVERLAY);
@@ -383,113 +372,51 @@ RTDECL(PRTLOGGER) RTLogDefaultInit(void)
     ASSERT_LOG_GROUP(MAIN_GUESTDNDTARGET);
     ASSERT_LOG_GROUP(MAIN_GUESTERRORINFO);
     ASSERT_LOG_GROUP(MAIN_GUESTFILE);
-    ASSERT_LOG_GROUP(MAIN_GUESTFILEEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTFILEIOEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTFILEOFFSETCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTFILEREADEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTFILEREGISTEREDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTFILESTATECHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTFILEWRITEEVENT);
     ASSERT_LOG_GROUP(MAIN_GUESTFSOBJINFO);
-    ASSERT_LOG_GROUP(MAIN_GUESTKEYBOARDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTMONITORCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTMOUSEEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTMULTITOUCHEVENT);
     ASSERT_LOG_GROUP(MAIN_GUESTOSTYPE);
     ASSERT_LOG_GROUP(MAIN_GUESTPROCESS);
-    ASSERT_LOG_GROUP(MAIN_GUESTPROCESSEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTPROCESSINPUTNOTIFYEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTPROCESSIOEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTPROCESSOUTPUTEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTPROCESSREGISTEREDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTPROCESSSTATECHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTPROPERTYCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_GUESTSESSION);
-    ASSERT_LOG_GROUP(MAIN_GUESTSESSIONEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTSESSIONREGISTEREDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTSESSIONSTATECHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_GUESTUSERSTATECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_HOST);
-    ASSERT_LOG_GROUP(MAIN_HOSTNAMERESOLUTIONCONFIGURATIONCHANGEEVENT);
     ASSERT_LOG_GROUP(MAIN_HOSTNETWORKINTERFACE);
-    ASSERT_LOG_GROUP(MAIN_HOSTPCIDEVICEPLUGEVENT);
     ASSERT_LOG_GROUP(MAIN_HOSTUSBDEVICE);
     ASSERT_LOG_GROUP(MAIN_HOSTUSBDEVICEFILTER);
     ASSERT_LOG_GROUP(MAIN_HOSTVIDEOINPUTDEVICE);
     ASSERT_LOG_GROUP(MAIN_INTERNALMACHINECONTROL);
     ASSERT_LOG_GROUP(MAIN_INTERNALSESSIONCONTROL);
     ASSERT_LOG_GROUP(MAIN_KEYBOARD);
-    ASSERT_LOG_GROUP(MAIN_KEYBOARDLEDSCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_MACHINE);
-    ASSERT_LOG_GROUP(MAIN_MACHINEDATACHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_MACHINEDEBUGGER);
-    ASSERT_LOG_GROUP(MAIN_MACHINEEVENT);
-    ASSERT_LOG_GROUP(MAIN_MACHINEREGISTEREDEVENT);
-    ASSERT_LOG_GROUP(MAIN_MACHINESTATECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_MEDIUM);
     ASSERT_LOG_GROUP(MAIN_MEDIUMATTACHMENT);
-    ASSERT_LOG_GROUP(MAIN_MEDIUMCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_MEDIUMCONFIGCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_MEDIUMFORMAT);
-    ASSERT_LOG_GROUP(MAIN_MEDIUMREGISTEREDEVENT);
     ASSERT_LOG_GROUP(MAIN_MOUSE);
-    ASSERT_LOG_GROUP(MAIN_MOUSECAPABILITYCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_MOUSEPOINTERSHAPE);
-    ASSERT_LOG_GROUP(MAIN_MOUSEPOINTERSHAPECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_NATENGINE);
     ASSERT_LOG_GROUP(MAIN_NATNETWORK);
-    ASSERT_LOG_GROUP(MAIN_NATNETWORKALTEREVENT);
-    ASSERT_LOG_GROUP(MAIN_NATNETWORKCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_NATNETWORKCREATIONDELETIONEVENT);
-    ASSERT_LOG_GROUP(MAIN_NATNETWORKPORTFORWARDEVENT);
-    ASSERT_LOG_GROUP(MAIN_NATNETWORKSETTINGEVENT);
-    ASSERT_LOG_GROUP(MAIN_NATNETWORKSTARTSTOPEVENT);
-    ASSERT_LOG_GROUP(MAIN_NATREDIRECTEVENT);
     ASSERT_LOG_GROUP(MAIN_NETWORKADAPTER);
-    ASSERT_LOG_GROUP(MAIN_NETWORKADAPTERCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_PARALLELPORT);
-    ASSERT_LOG_GROUP(MAIN_PARALLELPORTCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_PCIADDRESS);
     ASSERT_LOG_GROUP(MAIN_PCIDEVICEATTACHMENT);
     ASSERT_LOG_GROUP(MAIN_PERFORMANCECOLLECTOR);
     ASSERT_LOG_GROUP(MAIN_PERFORMANCEMETRIC);
     ASSERT_LOG_GROUP(MAIN_PROCESS);
     ASSERT_LOG_GROUP(MAIN_PROGRESS);
-    ASSERT_LOG_GROUP(MAIN_REUSABLEEVENT);
-    ASSERT_LOG_GROUP(MAIN_RUNTIMEERROREVENT);
     ASSERT_LOG_GROUP(MAIN_SERIALPORT);
-    ASSERT_LOG_GROUP(MAIN_SERIALPORTCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_SESSION);
-    ASSERT_LOG_GROUP(MAIN_SESSIONSTATECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_SHAREDFOLDER);
-    ASSERT_LOG_GROUP(MAIN_SHAREDFOLDERCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_SHOWWINDOWEVENT);
     ASSERT_LOG_GROUP(MAIN_SNAPSHOT);
-    ASSERT_LOG_GROUP(MAIN_SNAPSHOTCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_SNAPSHOTDELETEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_SNAPSHOTEVENT);
-    ASSERT_LOG_GROUP(MAIN_SNAPSHOTRESTOREDEVENT);
-    ASSERT_LOG_GROUP(MAIN_SNAPSHOTTAKENEVENT);
-    ASSERT_LOG_GROUP(MAIN_STATECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_STORAGECONTROLLER);
-    ASSERT_LOG_GROUP(MAIN_STORAGECONTROLLERCHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_STORAGEDEVICECHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_SYSTEMPROPERTIES);
     ASSERT_LOG_GROUP(MAIN_TOKEN);
     ASSERT_LOG_GROUP(MAIN_USBCONTROLLER);
-    ASSERT_LOG_GROUP(MAIN_USBCONTROLLERCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_USBDEVICE);
     ASSERT_LOG_GROUP(MAIN_USBDEVICEFILTERS);
-    ASSERT_LOG_GROUP(MAIN_USBDEVICESTATECHANGEDEVENT);
-    ASSERT_LOG_GROUP(MAIN_VBOXSVCAVAILABILITYCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_VIRTUALBOX);
     ASSERT_LOG_GROUP(MAIN_VIRTUALBOXCLIENT);
     ASSERT_LOG_GROUP(MAIN_VIRTUALBOXSDS);
     ASSERT_LOG_GROUP(MAIN_VIRTUALSYSTEMDESCRIPTION);
     ASSERT_LOG_GROUP(MAIN_VRDESERVER);
-    ASSERT_LOG_GROUP(MAIN_VRDESERVERCHANGEDEVENT);
     ASSERT_LOG_GROUP(MAIN_VRDESERVERINFO);
-    ASSERT_LOG_GROUP(MAIN_VRDESERVERINFOCHANGEDEVENT);
     ASSERT_LOG_GROUP(MISC);
     ASSERT_LOG_GROUP(MM);
     ASSERT_LOG_GROUP(MM_HEAP);
@@ -569,53 +496,66 @@ RTDECL(PRTLOGGER) RTLogDefaultInit(void)
      * Create the default logging instance.
      */
 #ifdef IN_RING3
-# ifndef IN_GUEST
-    char szExecName[RTPATH_MAX];
-    if (!RTProcGetExecutablePath(szExecName, sizeof(szExecName)))
-        strcpy(szExecName, "VBox");
+    const char *pszExeName = RTProcShortName();
+    if (!pszExeName)
+        pszExeName = "VBox";
     RTTIMESPEC TimeSpec;
     RTTIME Time;
+    RTPROCESS pid = RTProcSelf();
     RTTimeExplode(&Time, RTTimeNow(&TimeSpec));
-    rc = RTLogCreate(&pLogger, 0, NULL, "VBOX_LOG", RT_ELEMENTS(g_apszGroups), &g_apszGroups[0], RTLOGDEST_FILE,
+    rc = RTLogCreate(&pLogger, 0, NULL, "VBOX_LOG", RT_ELEMENTS(g_apszGroups), &g_apszGroups[0],
+# ifdef IN_GUEST
+                     RTLOGDEST_USER /* backdoor */,
+                     "./VBoxGAs-%04d-%02d-%02d-%02d-%02d-%02d.%03d-%s-%d.log",
+# else
+                     RTLOGDEST_FILE,
                      "./%04d-%02d-%02d-%02d-%02d-%02d.%03d-%s-%d.log",
-                     Time.i32Year, Time.u8Month, Time.u8MonthDay, Time.u8Hour, Time.u8Minute, Time.u8Second, Time.u32Nanosecond / 10000000,
-                     RTPathFilename(szExecName), RTProcSelf());
+# endif
+                     Time.i32Year, Time.u8Month, Time.u8MonthDay, Time.u8Hour, Time.u8Minute, Time.u8Second,
+                     Time.u32Nanosecond / 10000000, pszExeName, pid);
     if (RT_SUCCESS(rc))
     {
         /*
          * Write a log header.
          */
-        char szBuf[RTPATH_MAX];
-        RTTimeSpecToString(&TimeSpec, szBuf, sizeof(szBuf));
-        RTLogLoggerEx(pLogger, 0, ~0U, "Log created: %s\n", szBuf);
-        RTLogLoggerEx(pLogger, 0, ~0U, "Executable: %s\n", szExecName);
+        char      szBuf[80];
+        RTPROCESS pidParent = NIL_RTPROCESS;
+        RTProcQueryParent(pid, &pidParent);
+        RTLogLoggerEx(pLogger, 0, ~0U,
+                      "Log created: %s\n"
+                      "Process ID:  %d (%#x)\n"
+                      "Parent PID:  %d (%#x)\n"
+                      "Executable:  %s\n",
+                      RTTimeSpecToString(&TimeSpec, szBuf, sizeof(szBuf)),
+                      pid, pid,
+                      pidParent, pidParent,
+                      RTProcExecutablePath());
 
         /* executable and arguments - tricky and all platform specific. */
-#  if defined(RT_OS_WINDOWS)
+# if defined(RT_OS_WINDOWS)
         RTLogLoggerEx(pLogger, 0, ~0U, "Commandline: %ls\n", GetCommandLineW());
 
-#  elif defined(RT_OS_SOLARIS)
+# elif defined(RT_OS_SOLARIS)
         psinfo_t psi;
-        char szArgFileBuf[80];
-        RTStrPrintf(szArgFileBuf, sizeof(szArgFileBuf), "/proc/%ld/psinfo", (long)getpid());
-        FILE* pFile = fopen(szArgFileBuf, "rb");
+        RTStrPrintf(szBuf, sizeof(szBuf), "/proc/%ld/psinfo", (long)getpid());
+        FILE *pFile = fopen(szBuf, "rb");
         if (pFile)
         {
             if (fread(&psi, sizeof(psi), 1, pFile) == 1)
             {
-#   if 0     /* 100% safe:*/
+#  if 0     /* 100% safe:*/
                 RTLogLoggerEx(pLogger, 0, ~0U, "Args: %s\n", psi.pr_psargs);
-#   else     /* probably safe: */
+#  else     /* probably safe: */
                 const char * const *argv = (const char * const *)psi.pr_argv;
                 for (int iArg = 0; iArg < psi.pr_argc; iArg++)
                     RTLogLoggerEx(pLogger, 0, ~0U, "Arg[%d]: %s\n", iArg, argv[iArg]);
-#   endif
+#  endif
 
             }
             fclose(pFile);
         }
 
-#  elif defined(RT_OS_LINUX)
+# elif defined(RT_OS_LINUX)
         FILE *pFile = fopen("/proc/self/cmdline", "r");
         if (pFile)
         {
@@ -643,7 +583,7 @@ RTDECL(PRTLOGGER) RTLogDefaultInit(void)
             fclose(pFile);
         }
 
-#  elif defined(RT_OS_HAIKU)
+# elif defined(RT_OS_HAIKU)
         team_info info;
         if (get_team_info(0, &info) == B_OK)
         {
@@ -651,7 +591,7 @@ RTDECL(PRTLOGGER) RTLogDefaultInit(void)
             RTLogLoggerEx(pLogger, 0, ~0U, "Commandline: %.64s\n", info.args);
         }
 
-#  elif defined(RT_OS_FREEBSD) || defined(RT_OS_NETBSD)
+# elif defined(RT_OS_FREEBSD) || defined(RT_OS_NETBSD)
         /* Retrieve the required length first */
         int aiName[4];
 #  if defined(RT_OS_FREEBSD)
@@ -692,17 +632,12 @@ RTDECL(PRTLOGGER) RTLogDefaultInit(void)
             }
         }
 
-#  elif defined(RT_OS_OS2) || defined(RT_OS_DARWIN)
+# elif defined(RT_OS_OS2) || defined(RT_OS_DARWIN)
         /* commandline? */
-#  else
-#   error needs porting.
-#  endif
+# else
+#  error needs porting.
+# endif
     }
-
-# else  /* IN_GUEST */
-    /* The user destination is backdoor logging. */
-    rc = RTLogCreate(&pLogger, 0, NULL, "VBOX_LOG", RT_ELEMENTS(g_apszGroups), &g_apszGroups[0], RTLOGDEST_USER, "VBox.log");
-# endif /* IN_GUEST */
 
 #else /* IN_RING0 */
 
@@ -735,7 +670,8 @@ RTDECL(PRTLOGGER) RTLogDefaultInit(void)
 #  ifndef IN_GUEST
         pLogger->fDestFlags |= RTLOGDEST_DEBUGGER | RTLOGDEST_STDOUT;
 #  else
-        RTLogGroupSettings(pLogger, "all=~0 -default.l6.l5.l4.l3");
+        /*RTLogGroupSettings(pLogger, "all=~0 -default.l6.l5.l4.l3");*/
+        RTLogGroupSettings(pLogger, "all=~0");
 #  endif
 # endif
 # if defined(DEBUG_sandervl) && !defined(IN_GUEST)

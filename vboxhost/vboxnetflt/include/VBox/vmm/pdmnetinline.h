@@ -6,7 +6,7 @@
  */
 
 /*
- * Copyright (C) 2010-2019 Oracle Corporation
+ * Copyright (C) 2010-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;
@@ -541,8 +541,20 @@ DECLINLINE(uint32_t) PDMNetGsoCarveSegment(PCPDMNETWORKGSO pGso, const uint8_t *
             break;
         case PDMNETWORKGSOTYPE_IPV4_UDP:
             if (iSeg == 0)
+            {
+                Assert(pGso->offHdr2 + sizeof(uint16_t) <= cbFrame);
+                /* uh_ulen cannot exceed cbFrame - pGso->offHdr2 (offset of UDP header) */
+                if ((unsigned)(pGso->offHdr2 + RT_BE2H_U16(((PCRTNETUDP)&pbFrame[pGso->offHdr2])->uh_ulen)) > cbFrame)
+                {
+                    if (cbFrame > UINT16_MAX)
+                        ((PRTNETUDP)&pbFrame[pGso->offHdr2])->uh_ulen = 0xFFFF;
+                    else
+                        ((PRTNETUDP)&pbFrame[pGso->offHdr2])->uh_ulen = RT_H2BE_U16((uint16_t)(cbFrame - pGso->offHdr2));
+                }
+                Assert((unsigned)(pGso->offHdr2 + ((PCRTNETUDP)&pbFrame[pGso->offHdr2])->uh_ulen) <= cbFrame);
                 pdmNetGsoUpdateUdpHdrUfo(RTNetIPv4PseudoChecksum((PRTNETIPV4)&pbFrame[pGso->offHdr1]),
                                          pbSegHdrs, pbFrame, pGso->offHdr2);
+            }
             pdmNetGsoUpdateIPv4HdrUfo(pbSegHdrs, pGso->offHdr1, cbSegPayload, iSeg * pGso->cbMaxSeg,
                                       cbSegHdrs, iSeg + 1 == cSegs);
             break;

@@ -1,10 +1,10 @@
-/* $Id: threadctxhooks-r0drv-generic.cpp 127855 2019-01-01 01:45:53Z bird $ */
+/* $Id: threadctxhooks-r0drv-generic.cpp 135976 2020-02-04 10:35:17Z bird $ */
 /** @file
  * IPRT - Thread Context Switching Hook, Ring-0 Driver, Generic.
  */
 
 /*
- * Copyright (C) 2013-2019 Oracle Corporation
+ * Copyright (C) 2013-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;

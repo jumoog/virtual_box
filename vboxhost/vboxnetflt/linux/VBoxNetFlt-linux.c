@@ -1,10 +1,10 @@
-/* $Id: VBoxNetFlt-linux.c 129380 2019-03-15 16:05:43Z michael $ */
+/* $Id: VBoxNetFlt-linux.c 135976 2020-02-04 10:35:17Z bird $ */
 /** @file
  * VBoxNetFlt - Network Filter Driver (Host), Linux Specific Code.
  */
 
 /*
- * Copyright (C) 2006-2019 Oracle Corporation
+ * Copyright (C) 2006-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;
@@ -924,8 +924,13 @@ static void vboxNetFltLinuxSkBufToSG(PVBOXNETFLTINS pThis, struct sk_buff *pBuf,
     for (i = 0; i < skb_shinfo(pBuf)->nr_frags; i++)
     {
         skb_frag_t *pFrag = &skb_shinfo(pBuf)->frags[i];
+# if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 4, 0)
+        pSG->aSegs[iSeg].cb = pFrag->bv_len;
+        pSG->aSegs[iSeg].pv = VBOX_SKB_KMAP_FRAG(pFrag) + pFrag->bv_offset;
+# else /* < KERNEL_VERSION(5, 4, 0) */
         pSG->aSegs[iSeg].cb = pFrag->size;
         pSG->aSegs[iSeg].pv = VBOX_SKB_KMAP_FRAG(pFrag) + pFrag->page_offset;
+# endif /* >= KERNEL_VERSION(5, 4, 0) */
         Log6((" %p", pSG->aSegs[iSeg].pv));
         pSG->aSegs[iSeg++].Phys = NIL_RTHCPHYS;
         Assert(iSeg <= pSG->cSegsAlloc);
@@ -940,8 +945,13 @@ static void vboxNetFltLinuxSkBufToSG(PVBOXNETFLTINS pThis, struct sk_buff *pBuf,
         for (i = 0; i < skb_shinfo(pFragBuf)->nr_frags; i++)
         {
             skb_frag_t *pFrag = &skb_shinfo(pFragBuf)->frags[i];
+# if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 4, 0)
+            pSG->aSegs[iSeg].cb = pFrag->bv_len;
+            pSG->aSegs[iSeg].pv = VBOX_SKB_KMAP_FRAG(pFrag) + pFrag->bv_offset;
+# else /* < KERNEL_VERSION(5, 4, 0) */
             pSG->aSegs[iSeg].cb = pFrag->size;
             pSG->aSegs[iSeg].pv = VBOX_SKB_KMAP_FRAG(pFrag) + pFrag->page_offset;
+# endif /* >= KERNEL_VERSION(5, 4, 0) */
             Log6((" %p", pSG->aSegs[iSeg].pv));
             pSG->aSegs[iSeg++].Phys = NIL_RTHCPHYS;
             Assert(iSeg <= pSG->cSegsAlloc);
@@ -2107,8 +2117,6 @@ static int vboxNetFltLinuxEnumeratorCallback(struct notifier_block *self, unsign
     struct in_device *in_dev;
     struct inet6_dev *in6_dev;
 
-    const struct in_ifaddr *ifa;
-
     if (ulEventType != NETDEV_REGISTER)
         return NOTIFY_OK;
 
@@ -2125,8 +2133,9 @@ static int vboxNetFltLinuxEnumeratorCallback(struct notifier_block *self, unsign
 #endif
     if (in_dev != NULL)
     {
-        rcu_read_lock();
-        in_dev_for_each_ifa_rcu(ifa, in_dev) {
+        struct in_ifaddr *ifa;
+
+        for (ifa = in_dev->ifa_list; ifa; ifa = ifa->ifa_next) {
             if (VBOX_IPV4_IS_LOOPBACK(ifa->ifa_address))
                 return NOTIFY_OK;
 
@@ -2141,7 +2150,6 @@ static int vboxNetFltLinuxEnumeratorCallback(struct notifier_block *self, unsign
             pThis->pSwitchPort->pfnNotifyHostAddress(pThis->pSwitchPort,
                 /* :fAdded */ true, kIntNetAddrType_IPv4, &ifa->ifa_address);
         }
-     rcu_read_unlock();
     }
 
     /*
@@ -2189,9 +2197,9 @@ static int vboxNetFltLinuxNotifierIPv4Callback(struct notifier_block *self, unsi
     pEventDev = ifa->ifa_dev->dev;
     fMyDev = (pDev == pEventDev);
     Log(("VBoxNetFlt: %s: IPv4 event %s(0x%lx) %s: addr %RTnaipv4 mask %RTnaipv4\n",
-         pDev ? VBOX_NETDEV_NAME(pDev) : "<???>",
+         pDev ? VBOX_NETDEV_NAME(pDev) : "<unknown>",
          vboxNetFltLinuxGetNetDevEventName(ulEventType), ulEventType,
-         pEventDev ? VBOX_NETDEV_NAME(pEventDev) : "<???>",
+         pEventDev ? VBOX_NETDEV_NAME(pEventDev) : "<unknown>",
          ifa->ifa_address, ifa->ifa_mask));
 
     if (pDev != NULL)
@@ -2234,9 +2242,9 @@ static int vboxNetFltLinuxNotifierIPv6Callback(struct notifier_block *self, unsi
     pEventDev = ifa->idev->dev;
     fMyDev = (pDev == pEventDev);
     Log(("VBoxNetFlt: %s: IPv6 event %s(0x%lx) %s: %RTnaipv6\n",
-         pDev ? VBOX_NETDEV_NAME(pDev) : "<???>",
+         pDev ? VBOX_NETDEV_NAME(pDev) : "<unknown>",
          vboxNetFltLinuxGetNetDevEventName(ulEventType), ulEventType,
-         pEventDev ? VBOX_NETDEV_NAME(pEventDev) : "<???>",
+         pEventDev ? VBOX_NETDEV_NAME(pEventDev) : "<unknown>",
          &ifa->addr));
 
     if (pDev != NULL)

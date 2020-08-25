@@ -1,4 +1,4 @@
-# $Id: Makefile-footer.gmk 130485 2019-05-10 12:23:02Z bird $
+# $Id: Makefile-footer.gmk 139106 2020-07-09 15:43:17Z klaus $
 ## @file
 # VirtualBox Guest Additions kernel module Makefile, common parts.
 #
@@ -6,7 +6,7 @@
 #
 
 #
-# Copyright (C) 2006-2019 Oracle Corporation
+# Copyright (C) 2006-2020 Oracle Corporation
 #
 # This file is part of VirtualBox Open Source Edition (OSE), as
 # available from http://www.virtualbox.org. This file is free software;
@@ -100,32 +100,29 @@ JOBS := $(shell (getconf _NPROCESSORS_ONLN || grep -Ec '^processor|^CPU[0-9]' /p
 JOBS :=
  endif
 
+VBOX_SUBDIR_VAR=$(if $(VBOX_KERN_GROKS_SUBDIRS),SUBDIRS,M)
+
+# OL/UEK: CONFIG_MODULE_SIG= disables module signing for external modules.
+# Ubuntu 18.04.3: CONFIG_MODULE_SIG_ALL= disables signing of all modules.
+# We disable signing because we don't have any private key and want to leave
+# the key handling and secure boot config to the user.
+ ifndef VBOX_ALLOW_MODULE_SIGNING
+VBOX_DISABLE_SIGN=CONFIG_MODULE_SIG= CONFIG_MODULE_SIG_ALL=
+ endif
+
 # rules:
 all: $(VBOXMOD_0_TARGET)
 
-# OL/UEK: disable module signing for external modules -- we don't have any private key
 $(VBOXMOD_0_TARGET):
-ifneq ($(VBOX_KERN_GROKS_SUBDIRS),)
-	$(MAKE) V=$(VBOX_LNX_VERBOSE) CONFIG_MODULE_SIG= -C $(KERN_DIR) SUBDIRS=$(CURDIR) SRCROOT=$(CURDIR) $(if $(JOBS),-j$(JOBS),) modules
-else
-	$(MAKE) V=$(VBOX_LNX_VERBOSE) CONFIG_MODULE_SIG= -C $(KERN_DIR) M=$(CURDIR) SRCROOT=$(CURDIR) $(if $(JOBS),-j$(JOBS),) modules
-endif
+	$(MAKE) V=$(VBOX_LNX_VERBOSE) $(VBOX_DISABLE_SIGN) -C $(KERN_DIR) $(VBOX_SUBDIR_VAR)=$(CURDIR) SRCROOT=$(CURDIR) $(if $(JOBS),-j$(JOBS),) modules
 
 install: $(VBOXMOD_0_TARGET)
-ifneq ($(VBOX_KERN_GROKS_SUBDIRS),)
-	$(MAKE) V=$(VBOX_LNX_VERBOSE) CONFIG_MODULE_SIG= -C $(KERN_DIR) SUBDIRS=$(CURDIR) SRCROOT=$(CURDIR) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) INSTALL_MOD_DIR=$(INSTALL_MOD_DIR) modules_install
-else
-	$(MAKE) V=$(VBOX_LNX_VERBOSE) CONFIG_MODULE_SIG= -C $(KERN_DIR) M=$(CURDIR) SRCROOT=$(CURDIR) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) INSTALL_MOD_DIR=$(INSTALL_MOD_DIR) modules_install
-endif
+	$(MAKE) V=$(VBOX_LNX_VERBOSE) $(VBOX_DISABLE_SIGN) -C $(KERN_DIR) $(VBOX_SUBDIR_VAR)=$(CURDIR) SRCROOT=$(CURDIR) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) INSTALL_MOD_DIR=$(INSTALL_MOD_DIR) modules_install
 
 modules_install: install
 
 clean:
-ifneq ($(VBOX_KERN_GROKS_SUBDIRS),)
-	$(MAKE) V=$(VBOX_LNX_VERBOSE) CONFIG_MODULE_SIG= -C $(KERN_DIR) SUBDIRS=$(CURDIR) SRCROOT=$(CURDIR) clean
-else
-	$(MAKE) V=$(VBOX_LNX_VERBOSE) CONFIG_MODULE_SIG= -C $(KERN_DIR) M=$(CURDIR) SRCROOT=$(CURDIR) clean
-endif
+	$(MAKE) V=$(VBOX_LNX_VERBOSE) $(VBOX_DISABLE_SIGN) -C $(KERN_DIR) $(VBOX_SUBDIR_VAR)=$(CURDIR) SRCROOT=$(CURDIR) clean
 
 .PHONY: all $(VBOXMOD_0_TARGET) install modules_install clean
 endif # VBOX_KERN_GROKS_EXTMOD

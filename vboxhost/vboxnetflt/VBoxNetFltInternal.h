@@ -1,10 +1,10 @@
-/* $Id: VBoxNetFltInternal.h 127870 2019-01-01 04:34:11Z bird $ */
+/* $Id: VBoxNetFltInternal.h 135976 2020-02-04 10:35:17Z bird $ */
 /** @file
  * VBoxNetFlt - Network Filter Driver (Host), Internal Header.
  */
 
 /*
- * Copyright (C) 2008-2019 Oracle Corporation
+ * Copyright (C) 2008-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;

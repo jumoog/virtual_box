@@ -1,10 +1,10 @@
-/* $Id: handletable.h 127888 2019-01-01 06:31:29Z bird $ */
+/* $Id: handletable.h 135976 2020-02-04 10:35:17Z bird $ */
 /** @file
  * IPRT - Handle Tables, internal header.
  */
 
 /*
- * Copyright (C) 2008-2019 Oracle Corporation
+ * Copyright (C) 2008-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;

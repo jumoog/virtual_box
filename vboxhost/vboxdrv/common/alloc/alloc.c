@@ -1,10 +1,10 @@
-/* $Id: alloc.cpp 127855 2019-01-01 01:45:53Z bird $ */
+/* $Id: alloc.cpp 136884 2020-04-04 12:02:18Z bird $ */
 /** @file
  * IPRT - Memory Allocation.
  */
 
 /*
- * Copyright (C) 2006-2019 Oracle Corporation
+ * Copyright (C) 2006-2020 Oracle Corporation
  *
  * This file is part of VirtualBox Open Source Edition (OSE), as
  * available from http://www.virtualbox.org. This file is free software;
@@ -60,4 +60,14 @@ RTDECL(void *) RTMemDupExTag(const void *pvSrc, size_t cbSrc, size_t cbExtra, co
     return pvDst;
 }
 RT_EXPORT_SYMBOL(RTMemDupExTag);
+
+
+RTDECL(void *)  RTMemReallocZTag(void *pvOld, size_t cbOld, size_t cbNew, const char *pszTag) RT_NO_THROW_DEF
+{
+    void *pvDst = RTMemReallocTag(pvOld, cbNew, pszTag);
+    if (pvDst && cbNew > cbOld)
+        memset((uint8_t *)pvDst + cbOld, 0, cbNew - cbOld);
+    return pvDst;
+}
+RT_EXPORT_SYMBOL(RTMemReallocZTag);
 

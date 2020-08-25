@@ -1,10 +1,10 @@
-# $Id: Makefile 129703 2019-04-01 00:03:23Z bird $
+# $Id: Makefile 135976 2020-02-04 10:35:17Z bird $
 ## @file
 # Makefile for the VirtualBox Linux Host Driver.
 #
 
 #
-# Copyright (C) 2006-2019 Oracle Corporation
+# Copyright (C) 2006-2020 Oracle Corporation
 #
 # This file is part of VirtualBox Open Source Edition (OSE), as
 # available from http://www.virtualbox.org. This file is free software;
@@ -153,7 +153,9 @@ VBOXMOD_DEFS = \
 	RT_WITH_VBOX \
 	VBOX_WITH_HARDENING \
 	SUPDRV_WITH_RELEASE_LOGGER \
+	VBOX_WITHOUT_EFLAGS_AC_SET_IN_VBOXDRV \
 	 \
+	IPRT_WITHOUT_EFLAGS_AC_PRESERVING \
 	 \
 	VBOX_WITH_64_BITS_GUESTS # <-- must be consistent with Config.kmk!
 ifndef CONFIG_VBOXDRV_FIXEDMAJOR
