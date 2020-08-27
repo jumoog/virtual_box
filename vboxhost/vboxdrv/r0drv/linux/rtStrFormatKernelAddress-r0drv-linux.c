@@ -1,4 +1,4 @@
-/* $Id: rtStrFormatKernelAddress-r0drv-linux.c 135976 2020-02-04 10:35:17Z bird $ */
+/* $Id: rtStrFormatKernelAddress-r0drv-linux.c 139853 2020-08-11 19:53:38Z bird $ */
 /** @file
  * IPRT - IPRT String Formatter, ring-0 addresses.
  */
@@ -41,7 +41,7 @@
 DECLHIDDEN(size_t) rtStrFormatKernelAddress(char *pszBuf, size_t cbBuf, RTR0INTPTR uPtr, signed int cchWidth,
                                             signed int cchPrecision, unsigned int fFlags)
 {
-#if !defined(DEBUG) && LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 38)
+#if !defined(DEBUG) && RTLNX_VER_MIN(2,6,38)
     RT_NOREF(cchWidth, cchPrecision);
     /* use the Linux kernel function which is able to handle "%pK" */
     static const char s_szFmt[] = "0x%pK";

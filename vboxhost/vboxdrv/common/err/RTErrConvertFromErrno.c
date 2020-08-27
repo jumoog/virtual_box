@@ -1,4 +1,4 @@
-/* $Id: RTErrConvertFromErrno.cpp 135976 2020-02-04 10:35:17Z bird $ */
+/* $Id: RTErrConvertFromErrno.cpp 139658 2020-07-31 16:08:49Z klaus $ */
 /** @file
  * IPRT - Convert errno to iprt status codes.
  */
@@ -399,7 +399,7 @@ RTDECL(int)  RTErrConvertFromErrno(int iNativeCode)
 # endif
 #endif
 #ifdef ESTALE
-        //case ESTALE           116     /* Stale NFS file handle */
+        case ESTALE:            return VERR_STALE_FILE_HANDLE; /* 116: Stale NFS file handle */
 #endif
 #ifdef EUCLEAN
         //case EUCLEAN          117     /* Structure needs cleaning */

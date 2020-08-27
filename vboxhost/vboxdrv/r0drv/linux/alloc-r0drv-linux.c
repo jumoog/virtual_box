@@ -1,4 +1,4 @@
-/* $Id: alloc-r0drv-linux.c 135976 2020-02-04 10:35:17Z bird $ */
+/* $Id: alloc-r0drv-linux.c 139853 2020-08-11 19:53:38Z bird $ */
 /** @file
  * IPRT - Memory Allocation, Ring-0 Driver, Linux.
  */
@@ -38,7 +38,7 @@
 
 
 #if (defined(RT_ARCH_AMD64) || defined(DOXYGEN_RUNNING)) && !defined(RTMEMALLOC_EXEC_HEAP)
-# if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 23)
+# if RTLNX_VER_MIN(2,6,23) && RTLNX_VER_MAX(5,8,0)
 /**
  * Starting with 2.6.23 we can use __get_vm_area and map_vm_area to allocate
  * memory in the moduel range.  This is preferrable to the exec heap below.
@@ -196,13 +196,13 @@ static PRTMEMHDR rtR0MemAllocExecVmArea(size_t cb)
          * they provide a very convenient place for storing something we need
          * in the free function, if nothing else...
          */
-# if LINUX_VERSION_CODE < KERNEL_VERSION(3, 17, 0)
+# if RTLNX_VER_MAX(3,17,0)
         struct page **papPagesIterator = papPages;
 # endif
         pVmArea->nr_pages = cPages;
         pVmArea->pages    = papPages;
         if (!map_vm_area(pVmArea, PAGE_KERNEL_EXEC,
-# if LINUX_VERSION_CODE < KERNEL_VERSION(3, 17, 0)
+# if RTLNX_VER_MAX(3,17,0)
                          &papPagesIterator
 # else
                          papPages
@@ -215,7 +215,7 @@ static PRTMEMHDR rtR0MemAllocExecVmArea(size_t cb)
             return &pHdrEx->Hdr;
         }
         /* bail out */
-# if LINUX_VERSION_CODE < KERNEL_VERSION(3, 17, 0)
+# if RTLNX_VER_MAX(3,17,0)
         pVmArea->nr_pages = papPagesIterator - papPages;
 # endif
     }

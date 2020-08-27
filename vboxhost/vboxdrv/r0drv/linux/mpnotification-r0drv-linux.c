@@ -1,4 +1,4 @@
-/* $Id: mpnotification-r0drv-linux.c 135976 2020-02-04 10:35:17Z bird $ */
+/* $Id: mpnotification-r0drv-linux.c 139853 2020-08-11 19:53:38Z bird $ */
 /** @file
  * IPRT - Multiprocessor Event Notifications, Ring-0 Driver, Linux.
  */
@@ -37,7 +37,7 @@
 #include <iprt/thread.h>
 #include "r0drv/mp-r0drv.h"
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 10, 0)
+#if RTLNX_VER_MIN(4,10,0)
 
 static enum cpuhp_state g_rtR0MpOnline;
 
@@ -85,7 +85,7 @@ DECLHIDDEN(void) rtR0MpNotificationNativeTerm(void)
     IPRT_LINUX_RESTORE_EFL_AC();
 }
 
-#elif LINUX_VERSION_CODE >= KERNEL_VERSION(2, 5, 71) && defined(CONFIG_SMP)
+#elif RTLNX_VER_MIN(2,5,71) && defined(CONFIG_SMP)
 
 static int rtMpNotificationLinuxCallback(struct notifier_block *pNotifierBlock, unsigned long ulNativeEvent, void *pvCpu);
 
